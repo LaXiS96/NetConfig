@@ -25,50 +25,30 @@ namespace LaXiS.NetConfig.Library
             IpHlpApiDll.FreeMibTable(tablePtr);
 
             return interfaces;
-
-            //uint error;
-            //nint tablePtr = 0;
-            //uint size = 0;
-
-            //error = IpHlpApiDll.GetIfTable(tablePtr, ref size, true);
-            //if (error != WinError.NO_ERROR && error != WinError.INSUFFICIENT_BUFFER)
-            //    throw new WinApiException(error);
-
-            //tablePtr = Marshal.AllocHGlobal((int)size);
-            //error = IpHlpApiDll.GetIfTable(tablePtr, ref size, true);
-            //if (error != WinError.NO_ERROR)
-            //    throw new WinApiException(error);
-
-            //var table = Marshal.PtrToStructure<MIB_IFTABLE>(tablePtr);
-
-            //var interfaces = new List<Interface>();
-            //var rowPtr = tablePtr + Marshal.SizeOf(table.dwNumEntries);
-            //for (int i = 0; i < table.dwNumEntries; i++)
-            //{
-            //    var row = Marshal.PtrToStructure<MIB_IFROW>(rowPtr);
-            //    interfaces.Add(new Interface(row));
-
-            //    rowPtr += Marshal.SizeOf<MIB_IFROW>();
-            //}
-
-            //Marshal.FreeHGlobal(tablePtr);
-
-            //return interfaces;
         }
 
-        public static Interface GetInterface(int index)
+        private static Interface GetInterfaceInternal(int? index, long? luid)
         {
-            var row = new MIB_IFROW()
-            {
-                dwIndex = (uint)index
-            };
+            var row = new MIB_IF_ROW2();
 
-            var error = IpHlpApiDll.GetIfEntry(ref row);
+            if (index is not null)
+                row.InterfaceIndex = (uint)index;
+
+            if (luid is not null)
+                row.InterfaceLuid = (ulong)luid;
+
+            var error = IpHlpApiDll.GetIfEntry2(ref row);
             if (error != WinError.NO_ERROR)
                 throw new WinApiException(error);
 
             return new Interface(row);
         }
+
+        public static Interface GetInterface(int index)
+            => GetInterfaceInternal(index, default);
+
+        public static Interface GetInterface(long luid)
+            => GetInterfaceInternal(default, luid);
 
         public static void GetInterfaceInfo(int index)
         {
@@ -81,6 +61,8 @@ namespace LaXiS.NetConfig.Library
             var error = IpHlpApiDll.GetIpInterfaceEntry(ref row);
             if (error != WinError.NO_ERROR)
                 throw new WinApiException(error);
+
+            // TODO
         }
 
         public static List<Route> GetRoutes()
@@ -102,35 +84,6 @@ namespace LaXiS.NetConfig.Library
             IpHlpApiDll.FreeMibTable(tablePtr);
 
             return routes;
-
-            //uint error;
-            //nint tablePtr = 0;
-            //uint size = 0;
-
-            //error = IpHlpApiDll.GetIpForwardTable(tablePtr, ref size, true);
-            //if (error != WinError.NO_ERROR && error != WinError.INSUFFICIENT_BUFFER)
-            //    throw new WinApiException(error);
-
-            //tablePtr = Marshal.AllocHGlobal((int)size);
-            //error = IpHlpApiDll.GetIpForwardTable(tablePtr, ref size, true);
-            //if (error != WinError.NO_ERROR)
-            //    throw new WinApiException(error);
-
-            //var table = Marshal.PtrToStructure<MIB_IPFORWARDTABLE>(tablePtr);
-
-            //var routes = new List<Route>();
-            //var rowPtr = tablePtr + Marshal.SizeOf(table.dwNumEntries);
-            //for (int i = 0; i < table.dwNumEntries; i++)
-            //{
-            //    var row = Marshal.PtrToStructure<MIB_IPFORWARDROW>(rowPtr);
-            //    routes.Add(new Route(row));
-
-            //    rowPtr += Marshal.SizeOf<MIB_IPFORWARDROW>();
-            //}
-
-            //Marshal.FreeHGlobal(tablePtr);
-
-            //return routes;
         }
 
         public static void AddRoute(int interfaceIndex, IPAddress destination, IPAddress mask, IPAddress nextHop, int metric)
@@ -146,6 +99,11 @@ namespace LaXiS.NetConfig.Library
             var error = IpHlpApiDll.CreateIpForwardEntry2(ref row);
             if (error != WinError.NO_ERROR)
                 throw new WinApiException(error);
+        }
+
+        public static void RemoveRoute(int interfaceIndex, IPAddress destination, IPAddress mask, IPAddress nextHop)
+        {
+            // TODO convert to version 2
 
             //var row = new MIB_IPFORWARDROW
             //{
@@ -154,28 +112,11 @@ namespace LaXiS.NetConfig.Library
             //    dwForwardDest = BitConverter.ToUInt32(destination.GetAddressBytes()),
             //    dwForwardMask = BitConverter.ToUInt32(mask.GetAddressBytes()),
             //    dwForwardNextHop = BitConverter.ToUInt32(nextHop.GetAddressBytes()),
-            //    dwForwardMetric1 = (uint)metric // TODO see docs
             //};
 
-            //var error = IpHlpApiDll.CreateIpForwardEntry(ref row);
+            //var error = IpHlpApiDll.DeleteIpForwardEntry(ref row);
             //if (error != WinError.NO_ERROR)
             //    throw new WinApiException(error);
-        }
-
-        public static void RemoveRoute(int interfaceIndex, IPAddress destination, IPAddress mask, IPAddress nextHop)
-        {
-            var row = new MIB_IPFORWARDROW
-            {
-                dwForwardProto = MIB_IPFORWARD_PROTO.NETMGMT,
-                dwForwardIfIndex = (uint)interfaceIndex,
-                dwForwardDest = BitConverter.ToUInt32(destination.GetAddressBytes()),
-                dwForwardMask = BitConverter.ToUInt32(mask.GetAddressBytes()),
-                dwForwardNextHop = BitConverter.ToUInt32(nextHop.GetAddressBytes()),
-            };
-
-            var error = IpHlpApiDll.DeleteIpForwardEntry(ref row);
-            if (error != WinError.NO_ERROR)
-                throw new WinApiException(error);
         }
     }
 }

@@ -5,42 +5,43 @@ namespace LaXiS.NetConfig.Library
 {
     public class Route
     {
+        public long InterfaceLuid { get; }
+        public int InterfaceIndex { get; }
         public IPAddress Destination { get; }
         public IPAddress Mask { get; }
-        // Policy ?
+        public int MaskCidrLength { get; }
         public IPAddress NextHop { get; }
-        public uint InterfaceIndex { get; } // TODO decode interface
-        public string Type { get; } // TODO use enum
-        public string Protocol { get; } // TODO use enum
-        public TimeSpan Age { get; }
-        public uint NextHopAS { get; }
-        public uint[] Metrics { get; }
-
-        internal Route(MIB_IPFORWARDROW row)
-        {
-            Destination = new IPAddress(row.dwForwardDest);
-            Mask = new IPAddress(row.dwForwardMask);
-            NextHop = new IPAddress(row.dwForwardNextHop);
-            InterfaceIndex = row.dwForwardIfIndex;
-            Type = Enum.GetName(row.dwForwardType);
-            Protocol = Enum.GetName(row.dwForwardProto);
-            Age = TimeSpan.FromSeconds(row.dwForwardAge);
-            NextHopAS = row.dwForwardNextHopAS;
-            Metrics = new[] { row.dwForwardMetric1, row.dwForwardMetric2, row.dwForwardMetric3, row.dwForwardMetric4, row.dwForwardMetric5 };
-        }
+        public int SitePrefixLength { get; }
+        public int ValidLifetime { get; }
+        public int PreferredLifetime { get; }
+        public int Metric { get; }
+        public RouteProtocol Protocol { get; }
+        public bool Loopback { get; }
+        public bool AutoconfigureAddress { get; }
+        public bool Publish { get; }
+        public bool Immortal { get; }
+        public int Age { get; }
+        public RouteOrigin Origin { get; }
 
         internal Route(MIB_IPFORWARD_ROW2_IN row)
         {
+            InterfaceLuid = (long)row.InterfaceLuid;
+            InterfaceIndex = (int)row.InterfaceIndex;
             Destination = (IPAddress)row.DestinationPrefix.Prefix;
-            // TODO
-            //Mask = ;
-            //NextHop =;
-            //InterfaceIndex =;
-            //Type =;
-            //Protocol =;
-            //Age =;
-            //NextHopAS =;
-            //Metrics =;
+            Mask = IpExtensions.GetMaskAddress(row.DestinationPrefix.PrefixLength);
+            MaskCidrLength = row.DestinationPrefix.PrefixLength;
+            NextHop = (IPAddress)row.NextHop;
+            SitePrefixLength = row.SitePrefixLength;
+            ValidLifetime = (int)row.ValidLifetime;
+            PreferredLifetime = (int)row.PreferredLifetime;
+            Metric = (int)row.Metric;
+            Protocol = row.Protocol;
+            Loopback = row.Loopback;
+            AutoconfigureAddress = row.AutoconfigureAddress;
+            Publish = row.Publish;
+            Immortal = row.Immortal;
+            Age = (int)row.Age;
+            Origin = row.Origin;
         }
     }
 }

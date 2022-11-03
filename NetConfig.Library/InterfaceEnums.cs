@@ -1,6 +1,9 @@
-﻿namespace LaXiS.NetConfig.Library.WinApi
+﻿namespace LaXiS.NetConfig.Library
 {
-    internal enum IFTYPE : uint
+    /// <summary>
+    /// IFTYPE
+    /// </summary>
+    public enum InterfaceType
     {
         OTHER = 1,
         REGULAR_1822 = 2,
@@ -203,5 +206,155 @@
         WWANPP2 = 244,
         IEEE802154 = 259,
         XBOX_WIRELESS = 281,
+    }
+
+    /// <summary>
+    /// TUNNEL_TYPE
+    /// </summary>
+    public enum InterfaceTunnelType
+    {
+        None = 0,
+        Other = 1,
+        Direct = 2,
+        _6To4 = 11,
+        Isatap = 13,
+        Teredo = 14,
+        IpHttps = 15,
+    }
+
+    /// <summary>
+    /// NDIS_MEDIUM
+    /// </summary>
+    public enum InterfaceMediumType
+    {
+        _802_3,
+        _802_5,
+        Fddi,
+        Wan,
+        LocalTalk,
+        Dix,
+        ArcnetRaw,
+        Arcnet878_2,
+        Atm,
+        WirelessWan,
+        Irda,
+        Bpc,
+        CoWan,
+        _1394,
+        InfiniBand,
+        Tunnel,
+        Native802_11,
+        Loopback,
+        WiMAX,
+        IP,
+    }
+
+    /// <summary>
+    /// NDIS_PHYSICAL_MEDIUM
+    /// </summary>
+    public enum InterfacePhysicalMediumType
+    {
+        Unspecified,
+        WirelessLan,
+        CableModem,
+        PhoneLine,
+        PowerLine,
+        DSL,
+        FibreChannel,
+        _1394,
+        WirelessWan,
+        Native802_11,
+        Bluetooth,
+        Infiniband,
+        WiMax,
+        UWB,
+        _802_3,
+        _802_5,
+        Irda,
+        WiredWAN,
+        WiredCoWan,
+        Other,
+        Native802_15_4,
+    }
+
+    /// <summary>
+    /// NET_IF_ACCESS_TYPE
+    /// </summary>
+    public enum InterfaceAccessType
+    {
+        Loopback = 1,
+        Broadcast = 2,
+        PointToPoint = 3,
+        PointToMultiPoint = 4,
+    }
+
+    /// <summary>
+    /// NET_IF_DIRECTION_TYPE
+    /// </summary>
+    public enum InterfaceDirectionType
+    {
+        SendReceive,
+        SendOnly,
+        ReceiveOnly,
+    }
+
+    /// <summary>
+    /// InterfaceAndOperStatusFlags
+    /// </summary>
+    [Flags]
+    public enum InterfaceFlags : byte
+    {
+        HardwareInterface = 0x1,
+        FilterInterface = 0x2,
+        ConnectorPresent = 0x4,
+        NotAuthenticated = 0x8,
+        NotMediaConnected = 0x10,
+        Paused = 0x20,
+        LowPower = 0x40,
+        EndPointInterface = 0x80,
+    }
+
+    /// <summary>
+    /// IF_OPER_STATUS
+    /// </summary>
+    public enum InterfaceOperStatus
+    {
+        Up = 1,
+        Down,
+        Testing,
+        Unknown,
+        Dormant,
+        NotPresent,
+        LowerLayerDown,
+    }
+
+    /// <summary>
+    /// NET_IF_ADMIN_STATUS
+    /// </summary>
+    public enum InterfaceAdminStatus
+    {
+        Up = 1,
+        Down = 2,
+        Testing = 3,
+    }
+
+    /// <summary>
+    /// NET_IF_MEDIA_CONNECT_STATE
+    /// </summary>
+    public enum InterfaceMediaConnectState
+    {
+        Unknown,
+        Connected,
+        Disconnected,
+    }
+
+    /// <summary>
+    /// NET_IF_CONNECTION_TYPE
+    /// </summary>
+    public enum InterfaceConnectionType
+    {
+        Dedicated = 1,
+        Passive = 2,
+        Demand = 3,
     }
 }

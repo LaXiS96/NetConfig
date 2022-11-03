@@ -1,98 +1,97 @@
 ﻿using LaXiS.NetConfig.Library.WinApi;
-using System.Text;
 
 namespace LaXiS.NetConfig.Library
 {
     public class Interface
     {
-        public uint Index { get; }
+        public long Luid { get; }
+        public int Index { get; }
+        public Guid Guid { get; }
         public string Name { get; }
         public string Description { get; }
-        public string Type { get; }
-        public uint Mtu { get; }
-        public ulong ReceiveLinkSpeed { get; }
-        public ulong TransmitLinkSpeed { get; }
         public byte[] PhysicalAddress { get; }
-        // TODO AdminStatus ?
-        // TODO OperStatus ?
-        public uint LastChange { get; }
-        public ulong InBytes { get; }
-        public ulong InUnicastBytes { get; }
-        public ulong InMulticastBytes { get; }
-        public ulong InBroadcastBytes { get; }
-        public ulong InUnicastPackets { get; }
-        public ulong InOtherPackets { get; }
-        public ulong InDiscards { get; }
-        public ulong InErrors { get; }
-        public ulong InUnknownPackets { get; }
-        public ulong OutBytes { get; }
-        public ulong OutUnicastBytes { get; }
-        public ulong OutMulticastBytes { get; }
-        public ulong OutBroadcastBytes { get; }
-        public ulong OutUnicastPackets { get; }
-        public ulong OutOtherPackets { get; }
-        public ulong OutDiscards { get; }
-        public ulong OutErrors { get; }
-        // TODO OutQLen ?
-
-        internal Interface(MIB_IFROW row)
-        {
-            Index = row.dwIndex;
-            Name = row.wszName;
-            Description = Encoding.ASCII.GetString(row.bDescr);
-            Type = Enum.GetName(row.dwType);
-            Mtu = row.dwMtu;
-            ReceiveLinkSpeed = row.dwSpeed;
-            TransmitLinkSpeed = row.dwSpeed;
-
-            PhysicalAddress = new byte[row.dwPhysAddrLen];
-            Array.Copy(row.bPhysAddr, PhysicalAddress, PhysicalAddress.Length);
-
-            LastChange = row.dwLastChange;
-            InBytes = row.dwInOctets;
-            InUnicastPackets = row.dwInUcastPkts;
-            InOtherPackets = row.dwInNUcastPkts;
-            InDiscards = row.dwInDiscards;
-            InErrors = row.dwInErrors;
-            InUnknownPackets = row.dwInUnknownProtos;
-            OutBytes = row.dwOutOctets;
-            OutUnicastPackets = row.dwOutUcastPkts;
-            OutOtherPackets = row.dwOutNUcastPkts;
-            OutDiscards = row.dwOutDiscards;
-            OutErrors = row.dwOutErrors;
-        }
+        public byte[] PermanentPhysicalAddress { get; }
+        public int Mtu { get; }
+        public InterfaceType Type { get; }
+        public InterfaceTunnelType TunnelType { get; }
+        public InterfaceMediumType MediaType { get; }
+        public InterfacePhysicalMediumType PhysicalMediumType { get; }
+        public InterfaceAccessType AccessType { get; }
+        public InterfaceDirectionType DirectionType { get; }
+        public InterfaceFlags Flags { get; }
+        public InterfaceOperStatus OperStatus { get; }
+        public InterfaceAdminStatus AdminStatus { get; }
+        public InterfaceMediaConnectState MediaConnectState { get; }
+        public Guid NetworkGuid { get; }
+        public InterfaceConnectionType ConnectionType { get; }
+        public long TransmitLinkSpeed { get; }
+        public long ReceiveLinkSpeed { get; }
+        public long InBytes { get; }
+        public long InUnicastPackets { get; }
+        public long InOtherPackets { get; }
+        public long InDiscards { get; }
+        public long InErrors { get; }
+        public long InUnknownPackets { get; }
+        public long InUnicastBytes { get; }
+        public long InMulticastBytes { get; }
+        public long InBroadcastBytes { get; }
+        public long OutBytes { get; }
+        public long OutUnicastPackets { get; }
+        public long OutOtherPackets { get; }
+        public long OutDiscards { get; }
+        public long OutErrors { get; }
+        public long OutUnicastBytes { get; }
+        public long OutMulticastBytes { get; }
+        public long OutBroadcastBytes { get; }
+        public long OutQueueLength { get; }
 
         internal Interface(MIB_IF_ROW2 row)
         {
-            Index = row.InterfaceIndex;
+            Luid = (long)row.InterfaceLuid;
+            Index = (int)row.InterfaceIndex;
+            Guid = row.InterfaceGuid;
             Name = row.Alias;
             Description = row.Description;
-            Type = Enum.GetName(row.Type);
-            Mtu = row.Mtu;
-            ReceiveLinkSpeed = row.ReceiveLinkSpeed;
-            TransmitLinkSpeed = row.TransmitLinkSpeed;
 
             PhysicalAddress = new byte[row.PhysicalAddressLength];
             Array.Copy(row.PhysicalAddress, PhysicalAddress, PhysicalAddress.Length);
 
-            LastChange = 0;
-            InBytes = row.InOctets;
-            InUnicastBytes = row.InUcastOctets;
-            InMulticastBytes = row.InMulticastOctets;
-            InBroadcastBytes = row.InBroadcastOctets;
-            InUnicastPackets = row.InUcastPkts;
-            InOtherPackets = row.InNUcastPkts;
-            InDiscards = row.InDiscards;
-            InErrors = row.InErrors;
-            InUnknownPackets = row.InUnknownProtos;
-            OutBytes = row.OutOctets;
-            OutUnicastBytes = row.OutUcastOctets;
-            OutMulticastBytes = row.OutMulticastOctets;
-            OutBroadcastBytes = row.OutBroadcastOctets;
-            OutUnicastPackets = row.OutUcastPkts;
-            OutOtherPackets = row.OutNUcastPkts;
-            OutDiscards = row.OutDiscards;
-            OutErrors = row.OutErrors;
+            PermanentPhysicalAddress = new byte[row.PhysicalAddressLength];
+            Array.Copy(row.PermanentPhysicalAddress, PermanentPhysicalAddress, PermanentPhysicalAddress.Length);
+
+            Mtu = (int)row.Mtu;
+            Type = row.Type;
+            TunnelType = row.TunnelType;
+            MediaType = row.MediaType;
+            PhysicalMediumType = row.PhysicalMediumType;
+            AccessType = row.AccessType;
+            DirectionType = row.DirectionType;
+            Flags = row.InterfaceAndOperStatusFlags;
+            OperStatus = row.OperStatus;
+            AdminStatus = row.AdminStatus;
+            MediaConnectState = row.MediaConnectState;
+            NetworkGuid = row.NetworkGuid;
+            ConnectionType = row.ConnectionType;
+            TransmitLinkSpeed = (long)row.TransmitLinkSpeed;
+            ReceiveLinkSpeed = (long)row.ReceiveLinkSpeed;
+            InBytes = (long)row.InOctets;
+            InUnicastPackets = (long)row.InUcastPkts;
+            InOtherPackets = (long)row.InNUcastPkts;
+            InDiscards = (long)row.InDiscards;
+            InErrors = (long)row.InErrors;
+            InUnknownPackets = (long)row.InUnknownProtos;
+            InUnicastBytes = (long)row.InUcastOctets;
+            InMulticastBytes = (long)row.InMulticastOctets;
+            InBroadcastBytes = (long)row.InBroadcastOctets;
+            OutBytes = (long)row.OutOctets;
+            OutUnicastPackets = (long)row.OutUcastPkts;
+            OutOtherPackets = (long)row.OutNUcastPkts;
+            OutDiscards = (long)row.OutDiscards;
+            OutErrors = (long)row.OutErrors;
+            OutUnicastBytes = (long)row.OutUcastOctets;
+            OutMulticastBytes = (long)row.OutMulticastOctets;
+            OutBroadcastBytes = (long)row.OutBroadcastOctets;
+            OutQueueLength = (long)row.OutQLen;
         }
     }
 }

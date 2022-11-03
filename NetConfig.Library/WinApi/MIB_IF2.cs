@@ -20,24 +20,28 @@ namespace LaXiS.NetConfig.Library.WinApi
         public ulong InterfaceLuid;
         public uint InterfaceIndex;
         public Guid InterfaceGuid;
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 257)] public string Alias;
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 257)] public string Description;
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = IFDEF.IF_MAX_STRING_SIZE + 1)]
+        public string Alias;
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = IFDEF.IF_MAX_STRING_SIZE + 1)]
+        public string Description;
         public uint PhysicalAddressLength;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 32)] public byte[] PhysicalAddress;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 32)] public byte[] PermanentPhysicalAddress;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = IFDEF.IF_MAX_PHYS_ADDRESS_LENGTH)]
+        public byte[] PhysicalAddress;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = IFDEF.IF_MAX_PHYS_ADDRESS_LENGTH)]
+        public byte[] PermanentPhysicalAddress;
         public uint Mtu;
-        public IFTYPE Type;
-        public TUNNEL_TYPE TunnelType;
-        public NDIS_MEDIUM MediaType;
-        public NDIS_PHYSICAL_MEDIUM PhysicalMediumType;
-        public NET_IF_ACCESS_TYPE AccessType;
-        public NET_IF_DIRECTION_TYPE DirectionType;
-        public InterfaceAndOperStatusFlags InterfaceAndOperStatusFlags;
-        public IF_OPER_STATUS OperStatus;
-        public NET_IF_ADMIN_STATUS AdminStatus;
-        public NET_IF_MEDIA_CONNECT_STATE MediaConnectState;
+        public InterfaceType Type;
+        public InterfaceTunnelType TunnelType;
+        public InterfaceMediumType MediaType;
+        public InterfacePhysicalMediumType PhysicalMediumType;
+        public InterfaceAccessType AccessType;
+        public InterfaceDirectionType DirectionType;
+        public InterfaceFlags InterfaceAndOperStatusFlags;
+        public InterfaceOperStatus OperStatus;
+        public InterfaceAdminStatus AdminStatus;
+        public InterfaceMediaConnectState MediaConnectState;
         public Guid NetworkGuid;
-        public NET_IF_CONNECTION_TYPE ConnectionType;
+        public InterfaceConnectionType ConnectionType;
         public ulong TransmitLinkSpeed;
         public ulong ReceiveLinkSpeed;
         public ulong InOctets;
@@ -58,125 +62,5 @@ namespace LaXiS.NetConfig.Library.WinApi
         public ulong OutMulticastOctets;
         public ulong OutBroadcastOctets;
         public ulong OutQLen;
-    }
-
-    internal enum TUNNEL_TYPE
-    {
-        NONE = 0,
-        OTHER = 1,
-        DIRECT = 2,
-        _6TO4 = 11,
-        ISATAP = 13,
-        TEREDO = 14,
-        IPHTTPS = 15,
-    }
-
-    internal enum NDIS_MEDIUM
-    {
-        _802_3,
-        _802_5,
-        Fddi,
-        Wan,
-        LocalTalk,
-        Dix,
-        ArcnetRaw,
-        Arcnet878_2,
-        Atm,
-        WirelessWan,
-        Irda,
-        Bpc,
-        CoWan,
-        _1394,
-        InfiniBand,
-        Tunnel,
-        Native802_11,
-        Loopback,
-        WiMAX,
-        IP,
-    }
-
-    internal enum NDIS_PHYSICAL_MEDIUM
-    {
-        Unspecified,
-        WirelessLan,
-        CableModem,
-        PhoneLine,
-        PowerLine,
-        DSL,
-        FibreChannel,
-        _1394,
-        WirelessWan,
-        Native802_11,
-        Bluetooth,
-        Infiniband,
-        WiMax,
-        UWB,
-        _802_3,
-        _802_5,
-        Irda,
-        WiredWAN,
-        WiredCoWan,
-        Other,
-        Native802_15_4,
-    }
-
-    internal enum NET_IF_ACCESS_TYPE
-    {
-        LOOPBACK = 1,
-        BROADCAST = 2,
-        POINT_TO_POINT = 3,
-        POINT_TO_MULTI_POINT = 4,
-    }
-
-    internal enum NET_IF_DIRECTION_TYPE
-    {
-        SENDRECEIVE,
-        SENDONLY,
-        RECEIVEONLY,
-    }
-
-    internal enum IF_OPER_STATUS
-    {
-        Up = 1,
-        Down,
-        Testing,
-        Unknown,
-        Dormant,
-        NotPresent,
-        LowerLayerDown,
-    }
-
-    internal enum NET_IF_ADMIN_STATUS
-    {
-        UP = 1,
-        DOWN = 2,
-        TESTING = 3,
-    }
-
-    internal enum NET_IF_MEDIA_CONNECT_STATE
-    {
-        Unknown,
-        Connected,
-        Disconnected,
-    }
-
-    internal enum NET_IF_CONNECTION_TYPE
-    {
-        DEDICATED = 1,
-        PASSIVE = 2,
-        DEMAND = 3,
-    }
-
-    [Flags]
-    internal enum InterfaceAndOperStatusFlags : byte
-    {
-        HardwareInterface = 0x1,
-        FilterInterface = 0x2,
-        ConnectorPresent = 0x4,
-        NotAuthenticated = 0x8,
-        NotMediaConnected = 0x10,
-        Paused = 0x20,
-        LowPower = 0x40,
-        EndPointInterface = 0x80,
     }
 }
