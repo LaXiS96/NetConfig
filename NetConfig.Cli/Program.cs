@@ -1,4 +1,5 @@
 ﻿using LaXiS.NetConfig.Library;
+using System.Net.Sockets;
 
 namespace LaXiS.NetConfig.Cli
 {
@@ -7,10 +8,10 @@ namespace LaXiS.NetConfig.Cli
         static void Main(string[] args)
         {
             var ifaces = IpHelper.GetInterfaces();
-            var ifaceIndex = IpHelper.GetInterface(13);
-            var ifaceLuid = IpHelper.GetInterface(1689399683186688L);
+            var ifaceIndex = new Interface(14);
+            var ifaceLuid = new Interface(1689399683186688L);
 
-            var routes = IpHelper.GetRoutes();
+            var routes = IpHelper.GetRoutes(AddressFamily.InterNetwork);
 
             //try
             //{

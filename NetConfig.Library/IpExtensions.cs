@@ -13,9 +13,9 @@ namespace LaXiS.NetConfig.Library
             => (uint)IPAddress.HostToNetworkOrder(BitConverter.ToInt32(address.GetAddressBytes()));
 
         /// <summary>
-        /// Get CIDR mask length if the address represents a valid network mask
+        /// Get CIDR length if the address represents a valid network mask
         /// </summary>
-        public static byte GetCidrMaskLength(this IPAddress mask)
+        public static byte GetMaskCidrLength(this IPAddress mask)
         {
             var address = mask.ToInteger();
             var addressBits = mask.AddressFamily switch

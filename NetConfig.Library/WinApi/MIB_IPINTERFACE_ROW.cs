@@ -3,12 +3,12 @@
 namespace LaXiS.NetConfig.Library.WinApi
 {
     /// <summary>
-    /// <a href="https://docs.microsoft.com/en-us/windows/win32/api/netioapi/ns-netioapi-mib_ipinterface_row">Documentation</a>
+    /// <a href="https://learn.microsoft.com/en-us/windows-hardware/drivers/network/mib-ipinterface-row">Documentation</a>
     /// </summary>
     internal struct MIB_IPINTERFACE_ROW
     {
-        public ADDRESS_FAMILY Family;
-        public ulong InterfaceLuid; // TODO struct
+        public ushort Family;
+        public ulong InterfaceLuid;
         public uint InterfaceIndex;
         public uint MaxReassemblySize;
         public ulong InterfaceIdentifier;
@@ -23,12 +23,12 @@ namespace LaXiS.NetConfig.Library.WinApi
         [MarshalAs(UnmanagedType.U1)] public bool ManagedAddressConfigurationSupported;
         [MarshalAs(UnmanagedType.U1)] public bool OtherStatefulConfigurationSupported;
         [MarshalAs(UnmanagedType.U1)] public bool AdvertiseDefaultRoute;
-        public int RouterDiscoveryBehavior; // TODO enum
+        public RouterDiscoveryBehavior RouterDiscoveryBehavior;
         public uint DadTransmits;
         public uint BaseReachableTime;
         public uint RetransmitTime;
         public uint PathMtuDiscoveryTimeout;
-        public int LinkLocalAddressBehavior; // TODO enum
+        public LinkLocalAddressBehavior LinkLocalAddressBehavior;
         public uint LinkLocalAddressTimeout;
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)] public uint[] ZoneIndices;
         public uint SitePrefixLength;
@@ -39,8 +39,8 @@ namespace LaXiS.NetConfig.Library.WinApi
         [MarshalAs(UnmanagedType.U1)] public bool SupportsNeighborDiscovery;
         [MarshalAs(UnmanagedType.U1)] public bool SupportsRouterDiscovery;
         public uint ReachableTime;
-        public int TransmitOffload; // TODO bitfield struct
-        public int ReceiveOffload; // TODO bitfield struct
+        public InterfaceOffloadFlags TransmitOffload;
+        public InterfaceOffloadFlags ReceiveOffload;
         [MarshalAs(UnmanagedType.U1)] public bool DisableDefaultRoutes;
     }
 }

@@ -2,7 +2,7 @@
 
 namespace LaXiS.NetConfig.Library.WinApi
 {
-    internal static class WinError
+    internal readonly struct WinError
     {
         public const uint NO_ERROR = 0;
         public const uint ACCESS_DENIED = 5;
@@ -13,6 +13,14 @@ namespace LaXiS.NetConfig.Library.WinApi
         public const uint NO_DATA = 232;
         public const uint CAN_NOT_COMPLETE = 1003;
         public const uint NOT_FOUND = 1168;
+
+        public uint Value { get; }
+
+        public void ThrowIfError()
+        {
+            if (Value != NO_ERROR)
+                throw new WinApiException(Value);
+        }
 
         public static string GetMessage(uint error)
         {

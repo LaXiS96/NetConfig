@@ -357,4 +357,42 @@
         Passive = 2,
         Demand = 3,
     }
+
+    /// <summary>
+    /// NL_ROUTER_DISCOVERY_BEHAVIOR
+    /// </summary>
+    public enum RouterDiscoveryBehavior
+    {
+        Disabled = 0,
+        Enabled,
+        Dhcp,
+        Unchanged = -1
+    }
+
+    /// <summary>
+    /// NL_LINK_LOCAL_ADDRESS_BEHAVIOR
+    /// </summary>
+    public enum LinkLocalAddressBehavior
+    {
+        AlwaysOff = 0,
+        Delayed,
+        AlwaysOn,
+        Unchanged = -1
+    }
+
+    /// <summary>
+    /// NL_INTERFACE_OFFLOAD_ROD
+    /// </summary>
+    [Flags]
+    public enum InterfaceOffloadFlags : byte
+    {
+        NlChecksumSupported = 0x1,
+        NlOptionsSupported = 0x2,
+        TlDatagramChecksumSupported = 0x4,
+        TlStreamChecksumSupported = 0x8,
+        TlStreamOptionsSupported = 0x10,
+        FastPathCompatible = 0x20,
+        TlLargeSendOffloadSupported = 0x40,
+        TlGiantSendOffloadSupported = 0x80,
+    }
 }

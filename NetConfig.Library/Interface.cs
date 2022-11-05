@@ -1,97 +1,150 @@
 ﻿using LaXiS.NetConfig.Library.WinApi;
+using System.Net;
 
 namespace LaXiS.NetConfig.Library
 {
     public class Interface
     {
-        public long Luid { get; }
-        public int Index { get; }
-        public Guid Guid { get; }
-        public string Name { get; }
-        public string Description { get; }
-        public byte[] PhysicalAddress { get; }
-        public byte[] PermanentPhysicalAddress { get; }
-        public int Mtu { get; }
-        public InterfaceType Type { get; }
-        public InterfaceTunnelType TunnelType { get; }
-        public InterfaceMediumType MediaType { get; }
-        public InterfacePhysicalMediumType PhysicalMediumType { get; }
-        public InterfaceAccessType AccessType { get; }
-        public InterfaceDirectionType DirectionType { get; }
-        public InterfaceFlags Flags { get; }
-        public InterfaceOperStatus OperStatus { get; }
-        public InterfaceAdminStatus AdminStatus { get; }
-        public InterfaceMediaConnectState MediaConnectState { get; }
-        public Guid NetworkGuid { get; }
-        public InterfaceConnectionType ConnectionType { get; }
-        public long TransmitLinkSpeed { get; }
-        public long ReceiveLinkSpeed { get; }
-        public long InBytes { get; }
-        public long InUnicastPackets { get; }
-        public long InOtherPackets { get; }
-        public long InDiscards { get; }
-        public long InErrors { get; }
-        public long InUnknownPackets { get; }
-        public long InUnicastBytes { get; }
-        public long InMulticastBytes { get; }
-        public long InBroadcastBytes { get; }
-        public long OutBytes { get; }
-        public long OutUnicastPackets { get; }
-        public long OutOtherPackets { get; }
-        public long OutDiscards { get; }
-        public long OutErrors { get; }
-        public long OutUnicastBytes { get; }
-        public long OutMulticastBytes { get; }
-        public long OutBroadcastBytes { get; }
-        public long OutQueueLength { get; }
+        public long Luid { get; private set; }
+        public int Index { get; private set; }
+        public Guid Guid { get; private set; }
+        public string Name { get; private set; }
+        public string Description { get; private set; }
+        public byte[] PhysicalAddress { get; private set; }
+        public byte[] PermanentPhysicalAddress { get; private set; }
+        public int Mtu { get; private set; }
+        public InterfaceType Type { get; private set; }
+        public InterfaceTunnelType TunnelType { get; private set; }
+        public InterfaceMediumType MediaType { get; private set; }
+        public InterfacePhysicalMediumType PhysicalMediumType { get; private set; }
+        public InterfaceAccessType AccessType { get; private set; }
+        public InterfaceDirectionType DirectionType { get; private set; }
+        public InterfaceFlags Flags { get; private set; }
+        public InterfaceOperStatus OperStatus { get; private set; }
+        public InterfaceAdminStatus AdminStatus { get; private set; }
+        public InterfaceMediaConnectState MediaConnectState { get; private set; }
+        public Guid NetworkGuid { get; private set; }
+        public InterfaceConnectionType ConnectionType { get; private set; }
+        public long TransmitLinkSpeed { get; private set; }
+        public long ReceiveLinkSpeed { get; private set; }
+        public long InBytes { get; private set; }
+        public long InUnicastPackets { get; private set; }
+        public long InOtherPackets { get; private set; }
+        public long InDiscards { get; private set; }
+        public long InErrors { get; private set; }
+        public long InUnknownPackets { get; private set; }
+        public long InUnicastBytes { get; private set; }
+        public long InMulticastBytes { get; private set; }
+        public long InBroadcastBytes { get; private set; }
+        public long OutBytes { get; private set; }
+        public long OutUnicastPackets { get; private set; }
+        public long OutOtherPackets { get; private set; }
+        public long OutDiscards { get; private set; }
+        public long OutErrors { get; private set; }
+        public long OutUnicastBytes { get; private set; }
+        public long OutMulticastBytes { get; private set; }
+        public long OutBroadcastBytes { get; private set; }
+        public long OutQueueLength { get; private set; }
 
-        internal Interface(MIB_IF_ROW2 row)
+        internal Interface()
         {
-            Luid = (long)row.InterfaceLuid;
-            Index = (int)row.InterfaceIndex;
-            Guid = row.InterfaceGuid;
-            Name = row.Alias;
-            Description = row.Description;
+        }
 
-            PhysicalAddress = new byte[row.PhysicalAddressLength];
-            Array.Copy(row.PhysicalAddress, PhysicalAddress, PhysicalAddress.Length);
+        public Interface(InterfaceIdentifier identifier)
+        {
+            var row = new MIB_IF_ROW2
+            {
+                InterfaceIndex = (uint)identifier.Index,
+                InterfaceLuid = (ulong)identifier.Luid,
+            };
 
-            PermanentPhysicalAddress = new byte[row.PhysicalAddressLength];
-            Array.Copy(row.PermanentPhysicalAddress, PermanentPhysicalAddress, PermanentPhysicalAddress.Length);
+            IpHlpApiDll.GetIfEntry2(ref row).ThrowIfError();
 
-            Mtu = (int)row.Mtu;
-            Type = row.Type;
-            TunnelType = row.TunnelType;
-            MediaType = row.MediaType;
-            PhysicalMediumType = row.PhysicalMediumType;
-            AccessType = row.AccessType;
-            DirectionType = row.DirectionType;
-            Flags = row.InterfaceAndOperStatusFlags;
-            OperStatus = row.OperStatus;
-            AdminStatus = row.AdminStatus;
-            MediaConnectState = row.MediaConnectState;
-            NetworkGuid = row.NetworkGuid;
-            ConnectionType = row.ConnectionType;
-            TransmitLinkSpeed = (long)row.TransmitLinkSpeed;
-            ReceiveLinkSpeed = (long)row.ReceiveLinkSpeed;
-            InBytes = (long)row.InOctets;
-            InUnicastPackets = (long)row.InUcastPkts;
-            InOtherPackets = (long)row.InNUcastPkts;
-            InDiscards = (long)row.InDiscards;
-            InErrors = (long)row.InErrors;
-            InUnknownPackets = (long)row.InUnknownProtos;
-            InUnicastBytes = (long)row.InUcastOctets;
-            InMulticastBytes = (long)row.InMulticastOctets;
-            InBroadcastBytes = (long)row.InBroadcastOctets;
-            OutBytes = (long)row.OutOctets;
-            OutUnicastPackets = (long)row.OutUcastPkts;
-            OutOtherPackets = (long)row.OutNUcastPkts;
-            OutDiscards = (long)row.OutDiscards;
-            OutErrors = (long)row.OutErrors;
-            OutUnicastBytes = (long)row.OutUcastOctets;
-            OutMulticastBytes = (long)row.OutMulticastOctets;
-            OutBroadcastBytes = (long)row.OutBroadcastOctets;
-            OutQueueLength = (long)row.OutQLen;
+            Fill(this, row);
+        }
+
+        internal static Interface Fill(Interface instance, MIB_IF_ROW2 row)
+        {
+            instance.Luid = (long)row.InterfaceLuid;
+            instance.Index = (int)row.InterfaceIndex;
+            instance.Guid = row.InterfaceGuid;
+            instance.Name = row.Alias;
+            instance.Description = row.Description;
+
+            instance.PhysicalAddress = new byte[row.PhysicalAddressLength];
+            Array.Copy(row.PhysicalAddress, instance.PhysicalAddress, instance.PhysicalAddress.Length);
+
+            instance.PermanentPhysicalAddress = new byte[row.PhysicalAddressLength];
+            Array.Copy(row.PermanentPhysicalAddress, instance.PermanentPhysicalAddress, instance.PermanentPhysicalAddress.Length);
+
+            instance.Mtu = (int)row.Mtu;
+            instance.Type = row.Type;
+            instance.TunnelType = row.TunnelType;
+            instance.MediaType = row.MediaType;
+            instance.PhysicalMediumType = row.PhysicalMediumType;
+            instance.AccessType = row.AccessType;
+            instance.DirectionType = row.DirectionType;
+            instance.Flags = row.InterfaceAndOperStatusFlags;
+            instance.OperStatus = row.OperStatus;
+            instance.AdminStatus = row.AdminStatus;
+            instance.MediaConnectState = row.MediaConnectState;
+            instance.NetworkGuid = row.NetworkGuid;
+            instance.ConnectionType = row.ConnectionType;
+            instance.TransmitLinkSpeed = (long)row.TransmitLinkSpeed;
+            instance.ReceiveLinkSpeed = (long)row.ReceiveLinkSpeed;
+            instance.InBytes = (long)row.InOctets;
+            instance.InUnicastPackets = (long)row.InUcastPkts;
+            instance.InOtherPackets = (long)row.InNUcastPkts;
+            instance.InDiscards = (long)row.InDiscards;
+            instance.InErrors = (long)row.InErrors;
+            instance.InUnknownPackets = (long)row.InUnknownProtos;
+            instance.InUnicastBytes = (long)row.InUcastOctets;
+            instance.InMulticastBytes = (long)row.InMulticastOctets;
+            instance.InBroadcastBytes = (long)row.InBroadcastOctets;
+            instance.OutBytes = (long)row.OutOctets;
+            instance.OutUnicastPackets = (long)row.OutUcastPkts;
+            instance.OutOtherPackets = (long)row.OutNUcastPkts;
+            instance.OutDiscards = (long)row.OutDiscards;
+            instance.OutErrors = (long)row.OutErrors;
+            instance.OutUnicastBytes = (long)row.OutUcastOctets;
+            instance.OutMulticastBytes = (long)row.OutMulticastOctets;
+            instance.OutBroadcastBytes = (long)row.OutBroadcastOctets;
+            instance.OutQueueLength = (long)row.OutQLen;
+
+            return instance;
+        }
+
+        internal static Interface From(MIB_IF_ROW2 row)
+            => Fill(new(), row);
+
+        public void AddRoute(IPAddress destination, IPAddress mask, IPAddress nextHop, int metric)
+        {
+            var row = new MIB_IPFORWARD_ROW2_IN();
+            IpHlpApiDll.InitializeIpForwardEntry(ref row);
+
+            row.InterfaceLuid = (ulong)Luid;
+            row.InterfaceIndex = (uint)Index;
+            row.DestinationPrefix.Prefix = (SOCKADDR_IN)destination;
+            row.DestinationPrefix.PrefixLength = mask.GetMaskCidrLength();
+            row.NextHop = (SOCKADDR_IN)nextHop;
+
+            // TODO metric? see documentation (row.Metric is an offset to the interface metric obtained via GetIpInterfaceEntry)
+
+            IpHlpApiDll.CreateIpForwardEntry2(ref row).ThrowIfError();
+        }
+
+        public void RemoveRoute(IPAddress destination, IPAddress mask, IPAddress nextHop)
+        {
+            var row = new MIB_IPFORWARD_ROW2_IN();
+            IpHlpApiDll.InitializeIpForwardEntry(ref row);
+
+            row.InterfaceLuid = (ulong)Luid;
+            row.InterfaceIndex = (uint)Index;
+            row.DestinationPrefix.Prefix = (SOCKADDR_IN)destination;
+            row.DestinationPrefix.PrefixLength = mask.GetMaskCidrLength();
+            row.NextHop = (SOCKADDR_IN)nextHop;
+
+            IpHlpApiDll.DeleteIpForwardEntry2(ref row).ThrowIfError();
         }
     }
 }

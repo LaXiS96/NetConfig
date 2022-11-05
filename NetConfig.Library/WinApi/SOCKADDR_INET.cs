@@ -16,7 +16,7 @@ namespace LaXiS.NetConfig.Library.WinApi
     /// </summary>
     internal struct SOCKADDR_IN : SOCKADDR_INET
     {
-        public ADDRESS_FAMILY sin_family = ADDRESS_FAMILY.AF_INET;
+        public ushort sin_family = (ushort)AddressFamily.InterNetwork;
         public ushort sin_port = 0;
         public uint sin_addr = 0;
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)] public byte[] sin_zero = new byte[8];
@@ -42,7 +42,7 @@ namespace LaXiS.NetConfig.Library.WinApi
 
     internal struct SOCKADDR_IN6 : SOCKADDR_INET
     {
-        public ADDRESS_FAMILY sin6_family = ADDRESS_FAMILY.AF_INET6;
+        public ushort sin6_family = (ushort)AddressFamily.InterNetworkV6;
         public ushort sin6_port = 0;
         public uint sin6_flowinfo = 0;
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)] public byte[] sin6_addr = new byte[16];
