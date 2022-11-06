@@ -37,7 +37,7 @@
     {
         Manual,
         WellKnown,
-        DHCP,
+        Dhcp,
         RouterAdvertisement,
         _6to4,
     }

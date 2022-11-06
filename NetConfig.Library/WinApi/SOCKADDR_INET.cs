@@ -33,7 +33,7 @@ namespace LaXiS.NetConfig.Library.WinApi
             if (ip.AddressFamily != AddressFamily.InterNetwork)
                 throw new InvalidOperationException("Address family must be IPv4");
 
-            sin_addr = ip.ToInteger();
+            sin_addr = BitConverter.ToUInt32(ip.GetAddressBytes());
         }
 
         public static explicit operator SOCKADDR_IN(IPAddress ip) => new(ip);

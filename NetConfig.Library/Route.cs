@@ -5,8 +5,7 @@ namespace LaXiS.NetConfig.Library
 {
     public class Route
     {
-        public long InterfaceLuid { get; }
-        public int InterfaceIndex { get; }
+        public InterfaceIdentifier Interface { get; }
         public IPAddress Destination { get; }
         public IPAddress Mask { get; }
         public int MaskCidrLength { get; }
@@ -25,8 +24,11 @@ namespace LaXiS.NetConfig.Library
 
         internal Route(MIB_IPFORWARD_ROW2_IN row)
         {
-            InterfaceLuid = (long)row.InterfaceLuid;
-            InterfaceIndex = (int)row.InterfaceIndex;
+            Interface = new()
+            {
+                Luid = (long)row.InterfaceLuid,
+                Index = (int)row.InterfaceIndex,
+            };
             Destination = (IPAddress)row.DestinationPrefix.Prefix;
             Mask = IpExtensions.GetMaskAddress(row.DestinationPrefix.PrefixLength);
             MaskCidrLength = row.DestinationPrefix.PrefixLength;

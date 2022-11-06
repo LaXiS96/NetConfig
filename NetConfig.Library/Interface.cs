@@ -1,12 +1,12 @@
 ﻿using LaXiS.NetConfig.Library.WinApi;
 using System.Net;
+using System.Net.Sockets;
 
 namespace LaXiS.NetConfig.Library
 {
     public class Interface
     {
-        public long Luid { get; private set; }
-        public int Index { get; private set; }
+        public InterfaceIdentifier Identifier { get; private set; }
         public Guid Guid { get; private set; }
         public string Name { get; private set; }
         public string Description { get; private set; }
@@ -65,8 +65,11 @@ namespace LaXiS.NetConfig.Library
 
         internal static Interface Fill(Interface instance, MIB_IF_ROW2 row)
         {
-            instance.Luid = (long)row.InterfaceLuid;
-            instance.Index = (int)row.InterfaceIndex;
+            instance.Identifier = new()
+            {
+                Luid = (long)row.InterfaceLuid,
+                Index = (int)row.InterfaceIndex,
+            };
             instance.Guid = row.InterfaceGuid;
             instance.Name = row.Alias;
             instance.Description = row.Description;
@@ -117,18 +120,24 @@ namespace LaXiS.NetConfig.Library
         internal static Interface From(MIB_IF_ROW2 row)
             => Fill(new(), row);
 
-        public void AddRoute(IPAddress destination, IPAddress mask, IPAddress nextHop, int metric)
+        public IpInterface GetIpInterface(AddressFamily family)
+            => new(Identifier, family);
+
+        public void AddRoute(IPAddress destination, IPAddress mask, IPAddress nextHop, int? metric = default)
         {
             var row = new MIB_IPFORWARD_ROW2_IN();
             IpHlpApiDll.InitializeIpForwardEntry(ref row);
 
-            row.InterfaceLuid = (ulong)Luid;
-            row.InterfaceIndex = (uint)Index;
+            row.InterfaceLuid = (ulong)Identifier.Luid;
+            row.InterfaceIndex = (uint)Identifier.Index;
             row.DestinationPrefix.Prefix = (SOCKADDR_IN)destination;
             row.DestinationPrefix.PrefixLength = mask.GetMaskCidrLength();
             row.NextHop = (SOCKADDR_IN)nextHop;
+            row.Publish = false;
+            row.Immortal = false;
 
-            // TODO metric? see documentation (row.Metric is an offset to the interface metric obtained via GetIpInterfaceEntry)
+            if (metric is not null)
+                row.Metric = (uint)metric;
 
             IpHlpApiDll.CreateIpForwardEntry2(ref row).ThrowIfError();
         }
@@ -138,8 +147,8 @@ namespace LaXiS.NetConfig.Library
             var row = new MIB_IPFORWARD_ROW2_IN();
             IpHlpApiDll.InitializeIpForwardEntry(ref row);
 
-            row.InterfaceLuid = (ulong)Luid;
-            row.InterfaceIndex = (uint)Index;
+            row.InterfaceLuid = (ulong)Identifier.Luid;
+            row.InterfaceIndex = (uint)Identifier.Index;
             row.DestinationPrefix.Prefix = (SOCKADDR_IN)destination;
             row.DestinationPrefix.PrefixLength = mask.GetMaskCidrLength();
             row.NextHop = (SOCKADDR_IN)nextHop;
